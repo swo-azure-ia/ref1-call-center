@@ -35,16 +35,16 @@ jobs:
       #     tenant-id: ${{ secrets.REF1CALLCENTER_AZURE_TENANT_ID }}
       #     subscription-id: ${{ secrets.REF1CALLCENTER_AZURE_SUBSCRIPTION_ID }
 
-      # - name: Build and push container image to registry
-      #   uses: azure/container-apps-deploy-action@v1
-      #   with:
-      #     appSourcePath: ${{ github.workspace }}/app 
-      #     registryUrl: swoaidemoregistry.azurecr.io
-      #     registryUsername: ${{ secrets.REF1CALLCENTER_REGISTRY_USERNAME }}
-      #     registryPassword: ${{ secrets.REF1CALLCENTER_REGISTRY_PASSWORD }}
-      #     containerAppName: ref1-call-center
-      #     resourceGroup: aoai_refer_art_rg
-      #     imageToBuild: swoaidemoregistry.azurecr.io/ref1-call-center:${{ github.sha }}
-      #     dockerfilePath: Dockerfile
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          appSourcePath: ${{ github.workspace }}/app 
+          registryUrl: swoaidemoregistry.azurecr.io
+          registryUsername: ${{ secrets.REF1CALLCENTER_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.REF1CALLCENTER_REGISTRY_PASSWORD }}
+          containerAppName: ref1-call-center
+          resourceGroup: aoai_refer_art_rg
+          imageToBuild: swoaidemoregistry.azurecr.io/ref1-call-center:${{ github.sha }}
+          dockerfilePath: Dockerfile
 
 
