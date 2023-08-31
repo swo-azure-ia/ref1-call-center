@@ -38,4 +38,4 @@ jobs:
           resourceGroup: aoai_refer_art_rg
           imageToBuild: swoaidemoregistry.azurecr.io/ref1-call-center:${{ github.sha }}
           dockerfilePath: Dockerfile
-          environmentVariables: STT_REGION=japaneast STT_RESOURCE_ID=${{ secrets.STT_RESOURCE_ID }} TEXT_ANALYTICS_ENDPOINT=${{ secrets.TEXT_ANALYTICS_ENDPOINT }} AOAI_ENDPOINT=${{ secrets.AOAI_ENDPOINT }} AOAI_MODEL=${{ secrets.AOAI_MODEL }}
+          environmentVariables: STT_REGION=japaneast STT_RESOURCE_ID=${{ secrets.STT_RESOURCE_ID }} TEXT_ANALYTICS_ENDPOINT=${{ secrets.TEXT_ANALYTICS_ENDPOINT }} AOAI_ENDPOINT=${{ secrets.AOAI_ENDPOINT }} AOAI_MODEL=${{ secrets.AOAI_MODEL }} BASIC_AUTH_USER=${{ secrets.BASIC_AUTH_USER }} BASIC_AUTH_PASSWORD=${{ secrets.BASIC_AUTH_PASSWORD }}
