@@ -4,19 +4,19 @@ name: Trigger auto deployment for ref1-call-center
 on:
   # Automatically trigger it when detected changes in repo
   push:
-    branches: 
-      [ main ]
+    branches:
+      # [ main ]
     paths:
-    - 'app/**'
-    - '.github/workflows/ref1-call-center-AutoDeployTrigger-c2e6ef6a-1de3-4f1d-b621-236765d60821.yml'
+      - "app/**"
+      - ".github/workflows/ref1-call-center-AutoDeployTrigger-c2e6ef6a-1de3-4f1d-b621-236765d60821.yml"
 
-  # Allow mannually trigger 
-  workflow_dispatch:      
+  # Allow mannually trigger
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    permissions: 
+    permissions:
       id-token: write #This is required for requesting the OIDC JWT Token
 
     steps:
@@ -33,7 +33,7 @@ jobs:
       - name: Build and push container image to registry
         uses: azure/container-apps-deploy-action@v1
         with:
-          appSourcePath: ${{ github.workspace }}/app 
+          appSourcePath: ${{ github.workspace }}/app
           registryUrl: swoaidemoregistry.azurecr.io
           registryUsername: ${{ secrets.REF1CALLCENTER_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.REF1CALLCENTER_REGISTRY_PASSWORD }}
@@ -41,5 +41,4 @@ jobs:
           resourceGroup: aoai_refer_art_rg
           imageToBuild: swoaidemoregistry.azurecr.io/ref1-call-center:${{ github.sha }}
           dockerfilePath: Dockerfile
-
-
+          environmentVariables: STT_REGION=japaneast STT_RESOURCE_ID=${{ secrets.STT_RESOURCE_ID }} TEXT_ANALYTICS_ENDPOINT=${{ secrets.TEXT_ANALYTICS_ENDPOINT }} AOAI_ENDPOINT=${{ secrets.AOAI_ENDPOINT }} AOAI_MODEL=${{ secrets.AOAI_MODEL }} BASIC_AUTH_USER=${{ secrets.BASIC_AUTH_USER }} BASIC_AUTH_PASSWORD=${{ secrets.BASIC_AUTH_PASSWORD }}
