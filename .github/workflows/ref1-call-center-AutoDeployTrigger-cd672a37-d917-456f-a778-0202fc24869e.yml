@@ -4,19 +4,18 @@ name: Trigger auto deployment for ref1-call-center
 on:
   # Automatically trigger it when detected changes in repo
   push:
-    branches: 
-      [ main ]
+    branches: [main]
     paths:
-    - 'app/**'
-    - '.github/workflows/ref1-call-center-AutoDeployTrigger-cd672a37-d917-456f-a778-0202fc24869e.yml'
+      - "app/**"
+      - ".github/workflows/ref1-call-center-AutoDeployTrigger-cd672a37-d917-456f-a778-0202fc24869e.yml"
 
-  # Allow mannually trigger 
-  workflow_dispatch:      
+  # Allow mannually trigger
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    permissions: 
+    permissions:
       id-token: write #This is required for requesting the OIDC JWT Token
 
     steps:
@@ -26,19 +25,12 @@ jobs:
       - name: Log in with Azure
         uses: azure/login@v1
         with:
-          creds: '${{ secrets.AZURE_CREDENTIALS_LAN_APP }}'
-          
-      # - name: Azure Login
-      #   uses: azure/login@v1
-      #   with:
-      #     client-id: ${{ secrets.REF1CALLCENTER_AZURE_CLIENT_ID }}
-      #     tenant-id: ${{ secrets.REF1CALLCENTER_AZURE_TENANT_ID }}
-      #     subscription-id: ${{ secrets.REF1CALLCENTER_AZURE_SUBSCRIPTION_ID }
+          creds: "${{ secrets.AZURE_CREDENTIALS_LAN_APP }}"
 
       - name: Build and push container image to registry
         uses: azure/container-apps-deploy-action@v1
         with:
-          appSourcePath: ${{ github.workspace }}/app 
+          appSourcePath: ${{ github.workspace }}/app
           registryUrl: swoaidemoregistry.azurecr.io
           registryUsername: ${{ secrets.REF1CALLCENTER_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.REF1CALLCENTER_REGISTRY_PASSWORD }}
@@ -46,5 +38,4 @@ jobs:
           resourceGroup: aoai_refer_art_rg
           imageToBuild: swoaidemoregistry.azurecr.io/ref1-call-center:${{ github.sha }}
           dockerfilePath: Dockerfile
-
-
+          environmentVariables: STT_REGION=japaneast STT_RESOURCE_ID=${{ secrets.STT_RESOURCE_ID }} TEXT_ANALYTICS_ENDPOINT=${{ secrets.TEXT_ANALYTICS_ENDPOINT }} AOAI_ENDPOINT=${{ secrets.AOAI_ENDPOINT }} AOAI_MODEL=${{ secrets.AOAI_MODEL }}
