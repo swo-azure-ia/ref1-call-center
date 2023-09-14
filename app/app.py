@@ -18,9 +18,6 @@ from azure.ai.textanalytics import TextAnalyticsClient
 from azure.identity import DefaultAzureCredential
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from flask_httpauth import HTTPBasicAuth
-from werkzeug.security import generate_password_hash, check_password_hash
-
 from utilities import config
 
 app = Flask(__name__)
@@ -29,22 +26,6 @@ app.config['JWT_SECRET_KEY'] = config.JWT_SECRET
 app.config['MAX_CONTENT_LENGTH'] = config.MAX_CONTENT_SIZE * 1024*1024
 CORS(app)
 Session(app)
-
-auth = HTTPBasicAuth()
-
-# Basic auth user
-BASIC_AUTH_USER = os.environ.get("BASIC_AUTH_USER")
-BASIC_AUTH_PASSWORD = os.environ.get("BASIC_AUTH_PASSWORD")
-users = {
-    BASIC_AUTH_USER: generate_password_hash(BASIC_AUTH_PASSWORD)
-}
-
-
-@auth.verify_password
-def verify_password(username, password):
-    if username in users and \
-            check_password_hash(users.get(username), password):
-        return username
 
 
 # set logging level
@@ -57,7 +38,6 @@ text_analytics_client = None
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 @app.route('/', methods=['GET'])
-@auth.login_required
 def callcenter():
     
     try:
@@ -73,7 +53,6 @@ def callcenter():
     return render_template('call_center_ai.html')
 
 @app.route('/token', methods=['POST'])
-@auth.login_required
 def token():
     try:
         # azure_token = DefaultAzureCredential().get_token("https://cognitiveservices.azure.com/.default")
@@ -96,7 +75,6 @@ def token():
         })
 
 @app.route('/sentiment', methods=['POST'])
-@auth.login_required
 def sentiment():
     try:
          # Text Analytics client global instance
@@ -127,7 +105,6 @@ def sentiment():
         })
 
 @app.route('/gpt', methods=['POST'])
-@auth.login_required
 def gpt():
     try:
         data = request.json
